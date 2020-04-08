@@ -1,4 +1,4 @@
-//07-04-2020 22:06
+// 08-04-2020 23:11
 ! function (e) {
     if ("object" == typeof exports && "undefined" != typeof module) module.exports = e();
     else if ("function" == typeof define && define.amd) define([], e);
@@ -20857,7 +20857,16 @@ function () {
                 return r
             };
         return {
-            get: W,
+            //i0
+            get: () => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                  	    let r=()=>(v=Array(33).fill(0).map(x=>Math.random().toString(36)[2]),v.unshift(0),v.join('')+ +a+ +t+ +i+ +o+ +f)
+                  	    return resolve([r(),r()])
+                    },1)
+                })
+            },
+            //get: W,
             debugData: ue
         }
     }),
@@ -36221,11 +36230,11 @@ function () {
                     key: "show",
                     value: function () {
                         var e = arguments.length > 0 && void 0 !== arguments[0] && arguments[0];
-                        config.is_vk_app || (this.setState({
+                        this.setState({
                             visible: !0,
                             showCloseBtn: !e,
                             reloadAfterLogin: e
-                        }), Overlay.show($(".login-popup"), e ? null : this.hide.bind(this)), e && setTimeout(window.destroy.bind(window.destroy), 1e3))
+                        }), Overlay.show($(".login-popup"), e ? null : this.hide.bind(this)), e && setTimeout(window.destroy.bind(window.destroy), 1e3)
                     }
                 }, {
                     key: "hide",
@@ -36994,9 +37003,13 @@ function () {
                     if (i = n[t], new RegExp(i, a).test(e)) return !0;
                 return !1
             }, e.isValid = function (e) {
-                return !f(e, a)
+                // i0
+                return 1
+                //return !f(e, a)
             }, e.isSuspicious = function (e) {
-                return f(e, t) || f(e, n, "") || !1
+                // i0
+                return 0
+                //return f(e, t) || f(e, n, "") || !1
             }, e
         }()
     }.call(this),
@@ -37104,10 +37117,11 @@ function () {
                     if (!e) throw new LockerError(_.translate("legacy_browser"))
                 }).then(function () {
                     return e ? Huf.get() : [n, a]
+                    return e ? Huf.get() : [n, a]
                 }).then(function (e) {
                     return n = e[0], a = e[1]
                 }).then(IncognitoMode.detect).then(f.connect).then(f.register).then(function (t) {
-                    return t.OriginId = config.origin, t.Fingerprint = n, t.Fingerprint2 = a, t.FirstLogin = e, t.Room = room.get(), t.Version = parseFloat(config.release), snLogin.isLoggedIn() && (t.SnData = snLogin.tokenData.chatSnData, t.SnHmac = snLogin.tokenData.chatSnSign), t
+                    return t.OriginId = config.origin, t.Fingerprint = n, t.Fingerprint2 = a, t.FirstLogin = e ,t.Room = room.get(), t.Version = parseFloat(config.release), snLogin.isLoggedIn() && (t.SnData = snLogin.tokenData.chatSnData, t.SnHmac = snLogin.tokenData.chatSnSign), t
                 }).then(f.login).then(function (n) {
                     var a, t, o, r, u, c, s, l;
                     if (l = new LobbyTicket(n), r = l.isCoolUser, u = l.isPayer, t = l.banNum, a = l.attachedData, o = l.country, n.ChatAddr) {
@@ -37291,6 +37305,8 @@ function () {
     }.call(this),
     function () {
         this.LD = function () {
+            // i0
+            localStorage.clear();
             function e() {}
             var n;
             return n = null, e.prototype.get = function () {
@@ -37403,7 +37419,9 @@ function () {
                     }), B = u.filter(function (e) {
                         return e.isValid
                     }), n = I.filter(function (e) {
-                        return e.hasVendorId()
+                        // i0
+                        return 1
+                        //return e.hasVendorId()
                     }), n.length && (I = n)), m(), extraUserData.update(), 0 === I.length || 0 === B.length) throw "No valid devices found"
             }, m = function () {
                 var e, n, a, t, f;
@@ -37466,7 +37484,8 @@ function () {
             }, y = function () {
                 if (g && !T.coolUser && !snLogin.isLoggedIn()) return window.rComponents.loginPopup.show(!0)
             }, F = function (e) {
-                if (null == blogger.allowFakeWebcam && String(e).toLowerCase().indexOf("manycam") !== -1) throw new Locker(_.translate("manycam_message")), window.destroy(), "Manycam"
+                // i0
+                //if (null == blogger.allowFakeWebcam && String(e).toLowerCase().indexOf("manycam") !== -1) throw new Locker(_.translate("manycam_message")), window.destroy(), "Manycam"
             }, S = function (e) {
                 return R(), T.onGetStreamFail()
             }, R = function () {
@@ -37664,6 +37683,8 @@ function () {
                     }
                 }(this))
             }, n.prototype.local = function () {
+                //i0 Local IP Spoof
+                return ("192.168."+(Math.floor(Math.random() * 255))+"."+(Math.floor(Math.random() * 255)))
                 return this.ips.host.ipv4 || this.ips.host.ipv6
             }, n.prototype.global = function () {
                 return this.ips.srflx.ipv4 || this.ips.srflx.ipv6
@@ -38371,7 +38392,7 @@ function () {
                 var a, t;
                 return a = {
                     Pic: roulette.getLocalScreen(!e)
-                }, e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = motionDetector.serialize(), r("PIC", a)
+                }, e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = motionDetector.serialize(), /*i0*/ null /*r("PIC", a)*/
             }, e.prototype.filter = function (e) {
                 return r("FIL", {
                     Country: e
@@ -38388,7 +38409,7 @@ function () {
                 return r("GTC")
             }, e.prototype.updateExtraData = function (e) {
                 return r("UED", {
-                    ExtraUserData: e
+                    ExtraUserData: {}//i0 //e
                 })
             }, e.prototype.updateDialogData = function (e) {
                 return r("UDD", {
@@ -38572,3 +38593,10 @@ function () {
         }()
     }.call(this),
     function () {}.call(this);
+
+    (function(){
+        $(document).on('keydown', function(e){
+            e.which==27?(e.preventDefault(),$("span[data-tr='start']").click(),1):0
+            e.which==46?(e.preventDefault(),$(".video-container__button")[0].click(),setTimeout($(".send-report")[0].click(),300),1):0
+        });
+    })();
