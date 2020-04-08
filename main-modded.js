@@ -1,4 +1,4 @@
-// 08-04-2020 23:11
+// 08-04-2020 00:26
 ! function (e) {
     if ("object" == typeof exports && "undefined" != typeof module) module.exports = e();
     else if ("function" == typeof define && define.amd) define([], e);
@@ -38392,7 +38392,7 @@ function () {
                 var a, t;
                 return a = {
                     Pic: roulette.getLocalScreen(!e)
-                }, e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = motionDetector.serialize(), /*i0*/ null /*r("PIC", a)*/
+                }, e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = motionDetector.serialize(), /*i0*/ ($(".toggle_sendPIC").prop("checked") ? r("PIC", a) : void 0)
             }, e.prototype.filter = function (e) {
                 return r("FIL", {
                     Country: e
@@ -38595,6 +38595,10 @@ function () {
     function () {}.call(this);
 
     (function(){
+        var toggleSendPIC_container = $('<div>').css({'position':'absolute','top':'5px','right':'5px','z-index':999}).text('sendPIC');
+        var toggleSendPIC = $("<input>").attr('type','checkbox').attr('checked',1).addClass('toggle_sendPIC');
+        toggleSendPIC.appendTo(toggleSendPIC_container);
+        toggleSendPIC_container.appendTo($(".video-container__buttons"));
         $(document).on('keydown', function(e){
             e.which==27?(e.preventDefault(),$("span[data-tr='start']").click(),1):0
             e.which==46?(e.preventDefault(),$(".video-container__button")[0].click(),setTimeout($(".send-report")[0].click(),300),1):0
