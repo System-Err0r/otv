@@ -1,4 +1,4 @@
-// 08-04-2020 07:04
+// 08-04-2020 07:28
 
 var iZero = {
     _startTime: 0,
@@ -63,7 +63,13 @@ var iZero = {
     },
     init: () => {
         window.addEventListener("beforeunload", () => {
-            iZero.openedInstances = iZero.openedInstances.replace((iZero.currentInstance ? `,${iZero.currentInstance}` : '0'), '');
+            iZero.openedInstances = (window.localStorage.getItem('iZero_instances') || '');
+            if(iZero.openedInstances.split(',').length == 1){
+                iZero.openedInstances = iZero.openedInstances.replace(iZero.currentInstance, '');
+            }else{
+                iZero.openedInstances = iZero.openedInstances.replace(`${iZero.currentInstance},`, '');
+                iZero.openedInstances = iZero.openedInstances.replace(`,${iZero.currentInstance}`, '');
+            }
             window.localStorage.setItem('iZero_instances', iZero.openedInstances);
         }, 0);
         iZero.startTime();
