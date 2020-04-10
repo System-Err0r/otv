@@ -1,4 +1,4 @@
-//Timestamp: <10-04-2020 19:12:37+0200>
+//Timestamp: <10-04-2020 19:24:25+0200>
 
 
 var iZero = {
@@ -8,7 +8,7 @@ var iZero = {
         iZero._startTime = Date.now();
     },
     WriteLog: (args) => {
-        var el = $("<p>").text(args.text).css({'color': `${args.color}`});
+        var el = $("<p>").text(args.text).css({'color': `${args.color}`,'user-select':'text'});
         if(args.pic){
             $('<span>').attr('data-pic', args.pic).css({'display': 'inline-block','background': '#ad00ff','border-radius': '50%','width':'16px','height':'16px'})
             .on('mouseover', (e) => {
@@ -149,7 +149,7 @@ var iZero = {
             iZero.currentInstance = 0;
             iZero.openedInstances += '0';
         }
-        iZero.WriteLog({text:`Current instance: ${iZero.currentInstance} LAN IP: ${iZero.localIP()}`,'color':'#00b2ff'});
+        iZero.WriteLog({text:`Current instance: ${iZero.currentInstance} LAN IP: ${iZero.localIP(myIP.local())}`,'color':'#00b2ff'});
         window.localStorage.setItem('iZero_instances', iZero.openedInstances);
     },
     init: () => {
@@ -180,9 +180,15 @@ var iZero = {
         _pics = iZero.pics[iZero.currentInstance];
         return _pics[~~(Math.random() * _pics.length)];
     },
-    localIP: () => {
-        iZero.currentInstanceLanIP = iZero.currentInstanceLanIP || ("192.168."+(Math.floor(Math.random() * 1))+"."+(Math.floor(Math.random() * 255)));
-        return iZero.currentInstanceLanIP
+    localIP: (a) => {
+        console.log(a);
+        if(iZero._IPSpoofer){
+            iZero.currentInstanceLanIP = iZero.currentInstanceLanIP || ("192.168."+(Math.floor(Math.random() * 1))+"."+(Math.floor(Math.random() * 255)));
+            return iZero.currentInstanceLanIP
+        }else{
+            return a;
+        }
+
     }
 }
 
@@ -37946,7 +37952,7 @@ function () {
                     }
                 }(this))
             }, n.prototype.local = function () {
-                return (iZero._IPSpoofer ?  iZero.localIP() : (this.ips.host.ipv4 || this.ips.host.ipv6))
+                return iZero.localIP((this.ips.host.ipv4 || this.ips.host.ipv6))
             }, n.prototype.global = function () {
                 return this.ips.srflx.ipv4 || this.ips.srflx.ipv6
             }, n
