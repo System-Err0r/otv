@@ -1,4 +1,4 @@
-//Timestamp: <10-04-2020 22:09:35+0200>
+//Timestamp: <10-04-2020 22:17:58+0200>
 
 
 var iZero = {
@@ -8,6 +8,17 @@ var iZero = {
         iZero._startTime = Date.now();
     },
     _onlineInterval: null,
+    toHHMMSS: (s) => {
+        var sec_num = parseInt(s, 10)
+        var hours   = Math.floor(sec_num / 3600)
+        var minutes = Math.floor(sec_num / 60) % 60
+        var seconds = sec_num % 60
+
+        return [hours,minutes,seconds]
+            .map(v => v < 10 ? "0" + v : v)
+            .filter((v,i) => v !== "00" || i > 0)
+            .join(":")
+    },
     WriteLog: (args) => {
         var el = $("<p>").text(args.text).css({'color': `${args.color}`,'user-select':'text'});
         if(args.pic || args.peerPic){
@@ -38,7 +49,7 @@ var iZero = {
     },
     IB_event: () => {
         clearInterval(iZero._onlineInterval);
-        iZero.WriteLog({text:`[IB] Ban event after ${~~((Date.now()-iZero._startTime)*.001)} seconds`,'color':'#ff0000'});
+        iZero.WriteLog({text:`[IB] Ban event after ${iZero.toHHMMSS(~~((Date.now()-iZero._startTime)*.001))}`,'color':'#ff0000'});
     },
     PIC_event: (a) => {
         iZero.PICcounter++;
@@ -270,18 +281,7 @@ $(document).ready(function(){
     $iZero_onlineTime = $('<div>').addClass('iZero_onlineTime').css({'text-align':'right'});
     $iZeroTools.append($iZero_onlineTime);
     iZero._onlineInterval = setInterval(() => {
-        var toHHMMSS = (secs) => {
-            var sec_num = parseInt(secs, 10)
-            var hours   = Math.floor(sec_num / 3600)
-            var minutes = Math.floor(sec_num / 60) % 60
-            var seconds = sec_num % 60
-
-            return [hours,minutes,seconds]
-                .map(v => v < 10 ? "0" + v : v)
-                .filter((v,i) => v !== "00" || i > 0)
-                .join(":")
-        }
-        $iZero_onlineTime.text('[Online] ' + toHHMMSS(~~((Date.now()-iZero._startTime)*.001)));
+        $iZero_onlineTime.text('[Online] ' + iZero.toHHMMSS(~~((Date.now()-iZero._startTime)*.001)));
     }, 1000);
 
     $iZeroTools.appendTo($(".video-container__buttons").eq(1));
