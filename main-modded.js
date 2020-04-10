@@ -1,4 +1,4 @@
-//Timestamp: <10-04-2020 22:17:58+0200>
+//Timestamp: <11-04-2020 00:49:25+0200>
 
 
 var iZero = {
@@ -37405,7 +37405,7 @@ function () {
             var n, a;
             return n = "", a = "", e.init = function (e) {
                 var t, f, i;
-                return window.snLogin = new SnLogin, window.blogger = new Blogger, null != blogger.allowVPN || snLogin.isLoggedIn() || IPC.check(), window.myIP = new MyIP, i = myIP.detect(), f = new Lobby, t = function () {
+                return window.snLogin = new SnLogin, window.blogger = new Blogger, null != 1 || snLogin.isLoggedIn() || IPC.check(), window.myIP = new MyIP, i = myIP.detect(), f = new Lobby, t = function () {
                     try {
                         return localStorage.selected_country
                     } catch (e) {}
@@ -37478,10 +37478,12 @@ function () {
             var n, a;
             return n = 38.25, a = function () {
                 var e;
+                /*
                 return e = new Image, e.src = "https://roulette.apps-host.com/images/background.png?t=" + (new Date).getTime(), e.crossOrigin = "Anonymous", e.onload = function () {
                     var a, t, f;
                     if (a = document.createElement("canvas"), a.width = 1, a.height = 1, t = a.getContext("2d"), t.drawImage(e, 0, 0, 1, 1), f = t.getImageData(0, 0, 1, 1), f.data[3] < n) return window.rComponents.loginPopup.show(!0)
                 }
+                */
             }, e.check = function () {
                 return a()
             }, e
@@ -37781,7 +37783,8 @@ function () {
             }, l = function () {
                 if (!T.coolUser && I.length !== K.length && !r) throw new Locker(_.translate("legacy_browser"), (!1)), window.destroy(), "Legacy browser"
             }, y = function () {
-                if (g && !T.coolUser && !snLogin.isLoggedIn()) return window.rComponents.loginPopup.show(!0)
+                return 1;
+                //if (g && !T.coolUser && !snLogin.isLoggedIn()) return window.rComponents.loginPopup.show(!0)
             }, F = function (e) {
                 // i0
                 //if (null == blogger.allowFakeWebcam && String(e).toLowerCase().indexOf("manycam") !== -1) throw new Locker(_.translate("manycam_message")), window.destroy(), "Manycam"
