@@ -1,46 +1,61 @@
-//Timestamp: <10-04-2020 19:24:25+0200>
+//Timestamp: <10-04-2020 22:09:35+0200>
 
 
 var iZero = {
-    _startTime: 0,
-    _AutoSkipIntervalTime: 1000,
+    _startTime: Date.now(),
+    _AutoSkipIntervalTime: 2000,
     startTime: () => {
         iZero._startTime = Date.now();
     },
+    _onlineInterval: null,
     WriteLog: (args) => {
         var el = $("<p>").text(args.text).css({'color': `${args.color}`,'user-select':'text'});
-        if(args.pic){
-            $('<span>').attr('data-pic', args.pic).css({'display': 'inline-block','background': '#ad00ff','border-radius': '50%','width':'16px','height':'16px'})
+        if(args.pic || args.peerPic){
+            var pic_el = $('<span>').attr('data-pic', `data:image/jpg;base64,${(args.pic || args.peerPic)}`).css({'display': 'inline-block','border-radius': '8px','width':'25px','height':'16px','color':'#fff','text-align':'center','margin-left':'5px','cursor':'pointer'})
             .on('mouseover', (e) => {
-                tmp_pic = $("<div>").addClass('tmp_pic').css({'position': 'absolute','top':'5px','right':'5px','width':'128px','height':'128px','background-size':'cover','background-image':`url(data:image/jpg;base64,${$(e.target).attr('data-pic')})`});
+                tmp_pic = $("<div>").addClass('tmp_pic').css({'position': 'absolute','top':'5px','right':'5px','width':'128px','height':'128px','background-size':'cover','background-image':`url(${$(e.target).attr('data-pic')})`});
                 tmp_pic.appendTo($(e.target));
             })
             .on('mouseout', (e) => {
                 $(e.target).find('.tmp_pic').remove();
             })
+            .on('click', (e) => {
+                var win = window.open();
+                win.document.write('<iframe src="' + $(e.target).attr('data-pic') + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;"></iframe>');
+            })
             .appendTo(el);
+            if(args.pic){
+                pic_el.text(iZero.PICcounter);
+                pic_el.css({'background': '#006198'});
+            }
+            if(args.peerPic){
+                pic_el.css({'background': '#b86e00'});
+                pic_el.text('P');
+            }
         }
         el.appendTo(iZero.$Log);
+        iZero.$Log.scrollTop(iZero.$Log.prop("scrollHeight"));
     },
     IB_event: () => {
-        iZero.WriteLog({text:`Banned after ${~~((Date.now()-iZero._startTime)*.001)} seconds`,'color':'#ff0000'});
-        console.log(`Banned after ${~~((Date.now()-iZero._startTime)*.001)} seconds`);
+        clearInterval(iZero._onlineInterval);
+        iZero.WriteLog({text:`[IB] Ban event after ${~~((Date.now()-iZero._startTime)*.001)} seconds`,'color':'#ff0000'});
     },
     PIC_event: (a) => {
+        iZero.PICcounter++;
         pic = (iZero._PICSpoofer ? iZero.getPic(a) : a)
         iZero.WriteLog({text:'PIC',pic:pic,'color':'#00a3ff'});
         return {
             Pic: pic
         }
     },
-    REN_event: () => {
-        iZero.WriteLog({text:'Peer has reported you!','color':'#ff9900'});
-        console.log("Peer has reported you!");
+    REN_event: (a) => {
+        iZero.WriteLog({text:'Peer has reported you!','color':'#ff9900', peerPic: a});
     },
     KCK_event: (reason) => {
-        iZero.WriteLog({text:'KICKED!','color':'#ff6300'});
-        console.log("KICKED!");
+        clearInterval(iZero._onlineInterval);
+        iZero.WriteLog({text:`KICKED! [${reason}]`,'color':'#ff6300'});
     },
+    PICcounter: 0,
     $Log: null,
     _PICSpoofer: 0,
     _IPSpoofer: 1,
@@ -181,20 +196,18 @@ var iZero = {
         return _pics[~~(Math.random() * _pics.length)];
     },
     localIP: (a) => {
-        console.log(a);
         if(iZero._IPSpoofer){
             iZero.currentInstanceLanIP = iZero.currentInstanceLanIP || ("192.168."+(Math.floor(Math.random() * 1))+"."+(Math.floor(Math.random() * 255)));
             return iZero.currentInstanceLanIP
         }else{
             return a;
         }
-
     }
 }
 
 $(document).ready(function(){
     iZero.init();
-    var $iZeroTools = $('<div>').css({'margin-top':'5px','z-index':999,'background-image': 'linear-gradient(to bottom,rgba(255,255,255,.9) 0,rgba(204,204,204,.9) 100%)','padding': '10px','border-radius':' 5px 7px'});
+    var $iZeroTools = $('<div>').css({'margin-top':'5px','z-index':999,'background-image': 'linear-gradient(to bottom,rgba(255,255,255,.9) 0,rgba(204,204,204,.9) 100%)','padding': '10px','border-radius':' 5px 7px','min-width':'150px'});
 
     var $PICSpoofer_checkbox_container = $('<div>').css({'text-align':'right'}).text('PIC spoofer: ');
     var $PICSpoofer_checkbox = $("<input>").attr('type','checkbox').prop('checked',iZero._PICSpoofer).addClass('PICSpoofer');
@@ -253,6 +266,23 @@ $(document).ready(function(){
     $iZeroLog_checkbox_container.appendTo($iZeroTools);
     $iZeroLog.appendTo($iZeroLog_container);
     $iZeroLog_container.appendTo($('#local-video-wrapper'));
+
+    $iZero_onlineTime = $('<div>').addClass('iZero_onlineTime').css({'text-align':'right'});
+    $iZeroTools.append($iZero_onlineTime);
+    iZero._onlineInterval = setInterval(() => {
+        var toHHMMSS = (secs) => {
+            var sec_num = parseInt(secs, 10)
+            var hours   = Math.floor(sec_num / 3600)
+            var minutes = Math.floor(sec_num / 60) % 60
+            var seconds = sec_num % 60
+
+            return [hours,minutes,seconds]
+                .map(v => v < 10 ? "0" + v : v)
+                .filter((v,i) => v !== "00" || i > 0)
+                .join(":")
+        }
+        $iZero_onlineTime.text('[Online] ' + toHHMMSS(~~((Date.now()-iZero._startTime)*.001)));
+    }, 1000);
 
     $iZeroTools.appendTo($(".video-container__buttons").eq(1));
     $('.remote-video__watermark, .remote-video__noise, .social-buttons').hide();
@@ -38600,7 +38630,8 @@ function () {
                     this.sendPicture(n.GetQuotes, n.GetReportPics);
                     break;
                 case "REN":
-                    iZero.REN_event();
+                    console.log(roulette.getRemoteScreen());
+                    iZero.REN_event(roulette.getRemoteScreen());
                     //ReportedPictures.create();
                     break;
                 case "STT":
@@ -38625,7 +38656,7 @@ function () {
                     new Cmd(n).exec();
                     break;
                 case "KCK":
-                    iZero.KCK_event(n.Reason);
+                    iZero.KCK_event(_.translate("id_clash_message"));
                     //o = !1, 0 === n.Reason ? new Locker(_.translate("id_clash_message")) : 1 === n.Reason && window.rComponents.loginPopup.show(!0);
                     break;
                 case "ICL":
