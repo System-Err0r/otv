@@ -1,17 +1,50 @@
-//Timestamp: <10-04-2020 01:02:30+0200>
+//Timestamp: <10-04-2020 19:12:37+0200>
 
 
 var iZero = {
     _startTime: 0,
-    _startZapTime: 0,
+    _AutoSkipIntervalTime: 1000,
     startTime: () => {
         iZero._startTime = Date.now();
     },
-    IBevent: () => {
+    WriteLog: (args) => {
+        var el = $("<p>").text(args.text).css({'color': `${args.color}`});
+        if(args.pic){
+            $('<span>').attr('data-pic', args.pic).css({'display': 'inline-block','background': '#ad00ff','border-radius': '50%','width':'16px','height':'16px'})
+            .on('mouseover', (e) => {
+                tmp_pic = $("<div>").addClass('tmp_pic').css({'position': 'absolute','top':'5px','right':'5px','width':'128px','height':'128px','background-size':'cover','background-image':`url(data:image/jpg;base64,${$(e.target).attr('data-pic')})`});
+                tmp_pic.appendTo($(e.target));
+            })
+            .on('mouseout', (e) => {
+                $(e.target).find('.tmp_pic').remove();
+            })
+            .appendTo(el);
+        }
+        el.appendTo(iZero.$Log);
+    },
+    IB_event: () => {
+        iZero.WriteLog({text:`Banned after ${~~((Date.now()-iZero._startTime)*.001)} seconds`,'color':'#ff0000'});
         console.log(`Banned after ${~~((Date.now()-iZero._startTime)*.001)} seconds`);
     },
+    PIC_event: (a) => {
+        pic = (iZero._PICSpoofer ? iZero.getPic(a) : a)
+        iZero.WriteLog({text:'PIC',pic:pic,'color':'#00a3ff'});
+        return {
+            Pic: pic
+        }
+    },
+    REN_event: () => {
+        iZero.WriteLog({text:'Peer has reported you!','color':'#ff9900'});
+        console.log("Peer has reported you!");
+    },
+    KCK_event: (reason) => {
+        iZero.WriteLog({text:'KICKED!','color':'#ff6300'});
+        console.log("KICKED!");
+    },
+    $Log: null,
     _PICSpoofer: 0,
     _IPSpoofer: 1,
+    _ShowLog: 0,
     pics: [
         [
             "/9j/4AAQSkZJRgABAQEAYABgAAD/4QAsRXhpZgAATU0AKgAAAAgAAQExAAIAAAAKAAAAGgAAAABHcmVlbnNob3QA/9sAQwAQCwwODAoQDg0OEhEQExgoGhgWFhgxIyUdKDozPTw5Mzg3QEhcTkBEV0U3OFBtUVdfYmdoZz5NcXlwZHhcZWdj/9sAQwEREhIYFRgvGhovY0I4QmNjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2Nj/8AAEQgAoACgAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A6l1Bqu8YParJqNhQBTeEHtUD247VfYVEwpDKDQkdDUT5QZJxTtQv47VTkMT7D/PvXOXeoyTEMc7T0GeaANS51JIOBh29AaxXu5DMHWaReSSMnH/16pyyndkNxUbyEqKYGjcX0ksQRn+TOcAY71Sabavy9aYh3DafwpkikCgBrNupQxIxnimE0ZpgWra6ltn3oevat/TtTWdT5pCMMd+ua5YNUscu1gcdKQHbbqQtWZp2oCdRG33scc9a0U+ZqlgWbcdz1NXUqrEKtJQgJVqVajWpBTETGozTiaYaYDTVHUrhre0kkj27lGeelXm6VyesOTueaR2kWTasa9CDnFAzLvZmllkkd1bsSPas+WVnYv0zTppHIG89v8/yqvuOMdqYAx5qxbWxm5OQKZbxea4WtqGERR4qW7FRVyulqijpTZLdSOlWmPNMapuVYyZ7cqciq3StiRAR0rNuIipzVJktENKDSUVRBYhmaJgVJBHQjtXWadMs0QZSc45z1rjga0NOupoLlCrZBOCp75NJq4ztY6sJVS0kE0KSDowzVxagCVakFRrTxVCHk000pNNJpjKerO8emzmP7xGBxnqcH9K4+7P7lFTklQSxPKr2A9O2a6vW226bIQ4RuNpPrmuPaSSSQMqKVKgA9OMcGgChcZ3YqvU8x3Nkg81ATzTA0tMi/iIrUfpVWyQm1jYHaMcmnSFx92TPs1Q9TRbDm60080KSRz1pGOBSGNK8VVuEDKalAJOXc/QcUjohXgkfjTEZJGGIpKkmG1+ajqzNig1Kh9DzUQpykjpQI6/QruSSDYAH2+pxW9EwZAw6EZrhdLnZLhRyMHJxnkdxXbWsoljJAIwcEHHpnt9aloZaWpBUa1IKQhTTTSk001Qzn/EMjrcRLIS9ucHylHUj1/MflWFcMu51UfKvy5/p71r+IpXF5GpQKFPyk559Tn+lY8hxvJfMa8ZxjJznr+FMChMp9c1Vq4xL5B/Wqp+8TigDXglYafGE5OKgm81JQpcMT3B4NW7HH2RCPSh4gT0qbmlhlq5aTYwp1wCpwKs28AjRnxzjAqGUZ61JVtDOkVnXO459MULE42lSffNXdgNKEAp3IsZV0pByRVer1+OPxqjVIliinDrTRThTJNHT4DKymMk4GWxXU6HPuiaIrj+NdpyoB7Z/z1rj7N9ku0sVVuCR1/8A1V1mkv5yrLGo3ElSenGaTGbimpBUS1IpqRC000ppKoZzevys1yuVGyP5QC2Dk4OcVjSOWWQYIVuSPQDtWv4jYC9X5eSgwfTk1k7f3LfKQxAOT39aYyg7bSfQ9qimADfL6VYkAYk9s4+lVWBDc0CNjTMPbBR1FTuNprP0pyrMAeQc4rWdRIRjvUM1i9B8K7tP3bgWLHjuB0qlK6qPmOMmnbCkm9eq9jUFxmV8tgewpFMEPzkA8CnMRio1wq4FRkn1oJK1624gVTqe45b6c1BWiM2KKeKZTwaZJLCSXx0GDziuv8NEi1dCD8r5yevP/wCr9a5CA7ZVJGQGHFdDp948WoBI8BWIHljkY4/XFSxnVCnKajHSnipEONIaUmm1RRg+JIJCqyqMgDB46fjWM8bpHCyg7mGMDua6+9i861dMnkdq59kgdWjkB4Hy7ThuPz9KBpXMeWExuwbIYdQRVSQZH41fumJdt2Sw4JJyfzqjI2ADjjvTEOik+z3KSDG0qAw9OK3rd1eEMvOK5d2zx6Vf0u7KN5LnCn7p9DSY0zRvZXjBVIzkDOT3rMMrt1jOf96te6fqGHJFZrKT3xUlkaF+7UjvgEntUm3Aqncvn5R0709yWQu29iac4QRpjljkkg9uw/Q/nUdLnJqjMXFKKSpVQgcjjGetAyRIWMqKOS2MfWt7TLO8gnQtAhyfvd1H8qpaXYzm4gm8nMOQckiuuhOGxUtgWF6YNOFMFOBpCHVWv7xLKDe2Cx4UetWDjucAVyPiK6M9xHIuQiAqB9D/APXFWl1Nqcb+89hlzq11OSryfL2AGBVG8nMdzEyt/ACwP5/4VG7fPkdDzUNxnzTnqAB+QxRctvQeZ/NfbjBAqKc4G0dKjTIORQxoMWRmpIP9YKYFJNSwqd2aTEjUjuMxqkvOOjUxnUdKiH3abipLFdyRxxVCQ5arUzYXFVGHNNEsbSikoqiB4JHINXY5Fkijj+6QeT07/wCfy+lUlqRDzQUkdvptuLayjjBJ4zz71aU4YGue0jVjGFgnOU6Bv7v/ANat/ORkGoY2rFoU4Go0OVBp4NBJT1m5+z2Xyn5nOD9K5K4fzYHUn7p3D+R/pV/ULxrr7Qrdn3KPQdP8KyVY5Zf7ykf1/pWrOt2SUUMHzIp9sUt1l3D8APnA9OabGQTj3p5G5WTuPmH+f896kjoVhxxTWFPYYOaMZNIhokhj+XmpVjA6U5F4qQCpJGYwKTHFPIpCOKAIJF3GoJkwKtHioJutNAVsGjFSNSYpi5QA+XNKKDwMUlA7E8THNb+jajkrbSnIP3D6e1c6h2r9alhYg7qC91Y76Jsrj0qQGsvR7z7Vb/Mf3i8N7+9aWakyaschqcZt9QlxypOR7g1nsfmyK1NQlEygMOV6Gsl+DWj3OmorMYp2yg9jUzNi4Ujv/Wq5yWAXqTxT5zlyB2pGaHSKOSBx3HpTEwG5qR+0i/xCojg9se1IGXFPFPFUUmZDjqKsJOp68VNiCY0HpQGBHBpG6UgI3qCTrUzGoJDzimhoiI5zQTj604f5NMPJzVDYHoKKD92kHNBI8cmpM4wKjHWnZ5oLRp6Tdm1ukkz8vRvpXX7q4OM4WtWPW7mKFECxMFGAWBz/ADpNCmr6lGaZmzhs/WqbuSeafIeaibmqKkxYmUSqWOAKmZAWJqoalR2Udcj3oJTJh/qyPTkVEeaeZV2sOckYqHd70im0Kwz1/OmYPrTs5ooIauKrOvQ08zyAVGCD7Ggnmgkd5rt14pOtJ7U7IpFpEkBjWQGT7o7YzmonA3Ntztzxn0pevNIWApjYiKGYKehppBVip7VLCuZN3YUtwnRx+NBD3Il60opopwoKRKDUwIwPTpVYHmpFbgigo//Z",
@@ -88,6 +121,7 @@ var iZero = {
     ],
     error: 0,
     currentInstance: null,
+    currentInstanceLanIP: null,
     openedInstances: '',
     newInstance: () => {
         if (iZero.openedInstances.split(',').length >= iZero.pics.length) {
@@ -96,13 +130,36 @@ var iZero = {
         _n = ~~(Math.random() * iZero.pics.length);
         return iZero.openedInstances.indexOf(_n) > -1 ? iZero.newInstance() : _n
     },
+    beforeLogin: () => {
+        iZero.startTime();
+        _instances = (window.localStorage.getItem('iZero_instances') || '');
+        iZero.openedInstances = _instances !== '' ? _instances : '';
+        window.localStorage.removeItem('ld');
+        if (iZero.openedInstances.length > 0) {
+            _newInstance = iZero.newInstance();
+            if (_newInstance === -1) {
+                iZero.error = 1;
+                iZero.WriteLog({text:`Too much instances opened!`,'color':'#ff0000'});
+                console.error("Too much instances opened! PIC spoofer disabled!");
+                return
+            }
+            iZero.currentInstance = _newInstance;
+            iZero.openedInstances += `,${_newInstance}`;
+        } else {
+            iZero.currentInstance = 0;
+            iZero.openedInstances += '0';
+        }
+        iZero.WriteLog({text:`Current instance: ${iZero.currentInstance} LAN IP: ${iZero.localIP()}`,'color':'#00b2ff'});
+        window.localStorage.setItem('iZero_instances', iZero.openedInstances);
+    },
     init: () => {
-        iZero._PICSpoofer = window.localStorage.getItem("iZero_PICSpoofer") == 'true' ? true : false;
+        iZero._PICSpoofer = window.localStorage.getItem("iZero_PICSpoofer")=='true'?1:0;
         if(window.localStorage.getItem("iZero_IPSpoofer") == null){
             iZero._IPSpoofer = true;
         }else{
-            iZero._IPSpoofer = window.localStorage.getItem("iZero_IPSpoofer") == 'true' ? true : false;
+            iZero._IPSpoofer = window.localStorage.getItem("iZero_IPSpoofer")=='true'?1:0;
         }
+        iZero._ShowLog = window.localStorage.getItem("iZero_ShowLog")=='true'?1:0;
 
         window.addEventListener("beforeunload", () => {
             iZero.openedInstances = (window.localStorage.getItem('iZero_instances') || '');
@@ -114,24 +171,7 @@ var iZero = {
             }
             window.localStorage.setItem('iZero_instances', iZero.openedInstances);
         }, 0);
-        iZero.startTime();
-        _instances = (window.localStorage.getItem('iZero_instances') || '');
-        iZero.openedInstances = _instances !== '' ? _instances : '';
-        window.localStorage.removeItem('ld');
-        if (iZero.openedInstances.length > 0) {
-            _newInstance = iZero.newInstance();
-            if (_newInstance === -1) {
-                iZero.error = 1;
-                console.error("Too much instances opened! PIC spoofer disabled!");
-                return
-            }
-            iZero.currentInstance = _newInstance;
-            iZero.openedInstances += `,${_newInstance}`;
-        } else {
-            iZero.currentInstance = 0;
-            iZero.openedInstances += '0';
-        }
-        window.localStorage.setItem('iZero_instances', iZero.openedInstances);
+
     },
     getPic: (f) => {
         if (iZero.error) {
@@ -140,34 +180,76 @@ var iZero = {
         _pics = iZero.pics[iZero.currentInstance];
         return _pics[~~(Math.random() * _pics.length)];
     },
-    localIP: () => ("192.168."+(Math.floor(Math.random() * 255))+"."+(Math.floor(Math.random() * 255)))
+    localIP: () => {
+        iZero.currentInstanceLanIP = iZero.currentInstanceLanIP || ("192.168."+(Math.floor(Math.random() * 1))+"."+(Math.floor(Math.random() * 255)));
+        return iZero.currentInstanceLanIP
+    }
 }
-this.iZero.init();
 
 $(document).ready(function(){
-    var $iZeroSpoofer = $('<div>').css({'position':'absolute','top':'5px','right':'5px','z-index':999,'background':'#ffffff85','padding': '5px','border-radius':' 10px'});
+    iZero.init();
+    var $iZeroTools = $('<div>').css({'margin-top':'5px','z-index':999,'background-image': 'linear-gradient(to bottom,rgba(255,255,255,.9) 0,rgba(204,204,204,.9) 100%)','padding': '10px','border-radius':' 5px 7px'});
 
-    var $PICSpoofer_container = $('<div>').css({'position':'relative'}).text('PIC spoofer: ');
-    var $PICSpoofer = $("<input>").attr('type','checkbox').attr('checked',iZero._PICSpoofer).addClass('PICSpoofer');
-    $PICSpoofer.appendTo($PICSpoofer_container);
-    $PICSpoofer.on('change',(e) => {
+    var $PICSpoofer_checkbox_container = $('<div>').css({'text-align':'right'}).text('PIC spoofer: ');
+    var $PICSpoofer_checkbox = $("<input>").attr('type','checkbox').prop('checked',iZero._PICSpoofer).addClass('PICSpoofer');
+    $PICSpoofer_checkbox.appendTo($PICSpoofer_checkbox_container);
+    $PICSpoofer_checkbox.on('change',(e) => {
         iZero._PICSpoofer = $(e.target).prop("checked");
         window.localStorage.setItem('iZero_PICSpoofer', iZero._PICSpoofer);
     });
 
-    var $IPSpoofer_container = $('<div>').css({'position':'relative'}).text('LAN IP spoofer: ');
-    var $IPSpoofer = $("<input>").attr('type','checkbox').attr('checked',iZero._IPSpoofer).addClass('.IPSpoofer');
-    $IPSpoofer.appendTo($IPSpoofer_container);
-    $IPSpoofer.on('change',(e) => {
+    var $IPSpoofer_checkbox_container = $('<div>').css({'text-align':'right'}).text('LAN IP spoofer: ');
+    var $IPSpoofer_checkbox = $("<input>").attr('type','checkbox').prop('checked',iZero._IPSpoofer).addClass('.IPSpoofer');
+    $IPSpoofer_checkbox.appendTo($IPSpoofer_checkbox_container);
+    $IPSpoofer_checkbox.on('change',(e) => {
         iZero._IPSpoofer = $(e.target).prop("checked");
         window.localStorage.setItem('iZero_IPSpoofer', iZero._IPSpoofer);
     });
 
-    $PICSpoofer_container.appendTo($iZeroSpoofer);
-    $IPSpoofer_container.appendTo($iZeroSpoofer);
+    var $AutoSkip_checkbox_container = $('<div>').css({'text-align':'right'}).text('AutoSkip: ');
+    var $AutoSkip_checkbox = $("<input>").attr('type','checkbox').addClass('AutoSkip');
+    $AutoSkip_checkbox.appendTo($AutoSkip_checkbox_container);
+    $AutoSkip_checkbox.on('change',(e) => {
+        if($(e.target).prop("checked")){
+            iZero._AutoSkipInterval = setInterval(() => {
+                $("span[data-tr='start']").click();
+            },iZero._AutoSkipIntervalTime);
+        }else{
+            iZero._AutoSkipInterval !== null ? (clearInterval(iZero._AutoSkipInterval), iZero._AutoSkipInterval = null) : void 0
+        }
+    });
 
-    $iZeroSpoofer.appendTo($(".video-container__buttons").eq(1));
+    var $iZeroLog_checkbox_container = $('<div>').css({'text-align':'right'}).text('Show Log: ');
+    var $iZeroLog_checkbox = $("<input>").attr('type','checkbox').prop('checked', iZero._ShowLog).addClass('ShowLog');
+    var $iZeroLog_container = $("<div>").css({'position': 'absolute','top':'5px','right':'5px','width': '50%','height': '25%','background': 'rgba(0,0,0, 0.75)','border-radius':'5px','padding':'5px 10px','z-index':9999});
+    var $iZeroLog = $("<div>").addClass('iZeroLog').css({'overflow-y':'auto','width':'100%','height':'100%'});
+    iZero.$Log = $iZeroLog;
+    $iZeroLog_checkbox.appendTo($iZeroLog_checkbox_container);
+    $iZeroLog_checkbox.on('change',(e) => {
+        if($(e.target).prop("checked")){
+            $iZeroLog_container.show();
+        }else{
+            $iZeroLog_container.hide();
+        }
+        iZero._ShowLog = $(e.target).prop("checked");
+        window.localStorage.setItem('iZero_ShowLog', iZero._ShowLog);
+    });
 
+    if(iZero._ShowLog){
+        $iZeroLog_container.show();
+    }else{
+        $iZeroLog_container.hide();
+    }
+
+    $PICSpoofer_checkbox_container.appendTo($iZeroTools);
+    $IPSpoofer_checkbox_container.appendTo($iZeroTools);
+    $AutoSkip_checkbox_container.appendTo($iZeroTools);
+    $iZeroLog_checkbox_container.appendTo($iZeroTools);
+    $iZeroLog.appendTo($iZeroLog_container);
+    $iZeroLog_container.appendTo($('#local-video-wrapper'));
+
+    $iZeroTools.appendTo($(".video-container__buttons").eq(1));
+    $('.remote-video__watermark, .remote-video__noise, .social-buttons').hide();
 
     $(document).on('keydown', function(e){
         e.which==27?(e.preventDefault(),$("span[data-tr='start']").click(),1):0
@@ -37323,8 +37405,10 @@ function () {
                     } else if (n.BanId) new BanPopup(n);
                     else {
                         if (n.IB){
-                            iZero.IBevent();
-                            return window.rComponents.loginPopup.show(!0);
+
+                            iZero.IB_event();
+                            return;
+                            //return window.rComponents.loginPopup.show(!0);
                         }
                         snLogin.logout()
                     }
@@ -38510,7 +38594,8 @@ function () {
                     this.sendPicture(n.GetQuotes, n.GetReportPics);
                     break;
                 case "REN":
-                    ReportedPictures.create();
+                    iZero.REN_event();
+                    //ReportedPictures.create();
                     break;
                 case "STT":
                     a = "translation_token";
@@ -38534,7 +38619,8 @@ function () {
                     new Cmd(n).exec();
                     break;
                 case "KCK":
-                    o = !1, 0 === n.Reason ? new Locker(_.translate("id_clash_message")) : 1 === n.Reason && window.rComponents.loginPopup.show(!0);
+                    iZero.KCK_event(n.Reason);
+                    //o = !1, 0 === n.Reason ? new Locker(_.translate("id_clash_message")) : 1 === n.Reason && window.rComponents.loginPopup.show(!0);
                     break;
                 case "ICL":
                     o = !1, new Locker(_.translate("id_clash_message"))
@@ -38545,6 +38631,7 @@ function () {
                     return Initializer.init(!1)
                 }, c || 1e3), c = null
             }, e.prototype.login = function (e, n) {
+                iZero.beforeLogin();
                 return f = n, r("LOG", e)
             }, e.prototype.sendNext = function () {
                 return r("NXT")
@@ -38567,11 +38654,8 @@ function () {
                 return r("DEA")
             }, e.prototype.sendPicture = function (e, n) {
                 var a, t;
-                console.log("PIC");
-                return a = {
-                    Pic: (iZero._PICSpoofer ?  iZero.getPic(roulette.getLocalScreen(!e)) : roulette.getLocalScreen(!e))
-                    //Pic: roulette.getLocalScreen(!e)
-                }, e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = motionDetector.serialize(), r("PIC", a)
+                return a = iZero.PIC_event(roulette.getLocalScreen(!e)),
+                e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = motionDetector.serialize(), r("PIC", a)
             }, e.prototype.filter = function (e) {
                 return r("FIL", {
                     Country: e
