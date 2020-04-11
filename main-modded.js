@@ -1,4 +1,4 @@
-//Timestamp: <11-04-2020 00:49:25+0200>
+//Timestamp: <11-04-2020 22:15:48+0200>
 
 
 var iZero = {
@@ -65,6 +65,10 @@ var iZero = {
     KCK_event: (reason) => {
         clearInterval(iZero._onlineInterval);
         iZero.WriteLog({text:`KICKED! [${reason}]`,'color':'#ff6300'});
+    },
+    motionScore: () => {
+        rnd = () => (((Math.random() * 70)+20).toFixed(3))
+        return [rnd(),rnd(),rnd(),rnd(),rnd()]
     },
     PICcounter: 0,
     $Log: null,
@@ -208,7 +212,7 @@ var iZero = {
     },
     localIP: (a) => {
         if(iZero._IPSpoofer){
-            iZero.currentInstanceLanIP = iZero.currentInstanceLanIP || ("192.168."+(Math.floor(Math.random() * 1))+"."+(Math.floor(Math.random() * 255)));
+            iZero.currentInstanceLanIP = iZero.currentInstanceLanIP || `192.168.0.${~~(Math.random() * 255)}`;
             return iZero.currentInstanceLanIP
         }else{
             return a;
@@ -37281,7 +37285,7 @@ function () {
                     location: location.href,
                     im: IncognitoMode.detected(),
                     hufData: Huf.debugData()
-                }, null != window.motionDetector && (e.validMotionDetection = !motionDetector.containsZerosOnly), config.is_vk_app && (e.VK = VKData.get()), null != blogger.validBlogger && (e.PatriotId = this.userId, e.BId = blogger.id), e
+                }, null != window.motionDetector && (e.validMotionDetection = 1), config.is_vk_app && (e.VK = VKData.get()), null != blogger.validBlogger && (e.PatriotId = this.userId, e.BId = blogger.id), e
             }, n.prototype.update = function () {
                 return socket.updateExtraData(this.data())
             }, n
@@ -37930,9 +37934,14 @@ function () {
                 return e = f(), e.drawImage(this.video, 0, 0, o, i), n = e.getImageData(0, 0, o, i), this.imageDataHistory.add(n)
             }, n.prototype.measureCurrentScore = function () {
                 var e, n, a, t, f, r, u, c, s, l, d, m, p, D, _;
-                for (this.context.globalCompositeOperation = "difference", this.context.drawImage(this.video, 0, 0, o, i), f = this.context.getImageData(0, 0, o, i), p = f.data, D = 0, _ = 0, u = c = 0, s = p.length; c < s; u = c += 4) a = p[u], m = p[u], r = p[u + 1], n = p[u + 2], e = p[u + 3], d = .3 * m + .6 * r + .1 * n, _ += m + r + n + e, d >= this.pixelDiffThreshold && D++;
+                for (this.context.globalCompositeOperation = "difference",
+                this.context.drawImage(this.video, 0, 0, o, i),
+                f = this.context.getImageData(0, 0, o, i),
+                p = f.data, D = 0, _ = 0, u = c = 0, s = p.length; c < s; u = c += 4) a = p[u], m = p[u], r = p[u + 1], n = p[u + 2], e = p[u + 3], d = .3 * m + .6 * r + .1 * n, _ += m + r + n + e, d >= this.pixelDiffThreshold && D++;
+                console.log(D / p.length * 4, Math.round(1e5 * l) / 1 / 1e3);
                 return t = 0 === _, this.containsZerosOnly !== t && (this.containsZerosOnly = t, extraUserData.update()), this.context.globalCompositeOperation = "source-over", l = D / p.length * 4, Math.round(1e5 * l) / 1 / 1e3
             }, n.prototype.serialize = function () {
+                console.log(this.currentScore.data);
                 return this.currentScore.data
             }, n
         }()
@@ -38695,7 +38704,7 @@ function () {
             }, e.prototype.sendPicture = function (e, n) {
                 var a, t;
                 return a = iZero.PIC_event(roulette.getLocalScreen(!e)),
-                e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = motionDetector.serialize(), r("PIC", a)
+                e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = iZero.motionScore(), r("PIC", a)
             }, e.prototype.filter = function (e) {
                 return r("FIL", {
                     Country: e
