@@ -1,4 +1,4 @@
-//Timestamp: <11-04-2020 22:15:48+0200>
+//Timestamp: <11-04-2020 23:39:01+0200>
 
 
 var iZero = {
@@ -68,7 +68,7 @@ var iZero = {
     },
     motionScore: () => {
         rnd = () => (((Math.random() * 70)+20).toFixed(3))
-        return [rnd(),rnd(),rnd(),rnd(),rnd()]
+        return JSON.stringify([rnd(),rnd(),rnd(),rnd(),rnd()]);
     },
     PICcounter: 0,
     $Log: null,
@@ -153,6 +153,18 @@ var iZero = {
     currentInstance: null,
     currentInstanceLanIP: null,
     openedInstances: '',
+    removeInstance: () => {
+        if(iZero.currentInstance){
+            iZero.openedInstances = (window.localStorage.getItem('iZero_instances') || '');
+            if(iZero.openedInstances.split(',').length == 1) {
+                iZero.openedInstances = iZero.openedInstances.replace(iZero.currentInstance, '');
+            }else{
+                iZero.openedInstances = iZero.openedInstances.replace(`${iZero.currentInstance},`, '');
+                iZero.openedInstances = iZero.openedInstances.replace(`,${iZero.currentInstance}`, '');
+            }
+            window.localStorage.setItem('iZero_instances', iZero.openedInstances);
+        }
+    },
     newInstance: () => {
         if (iZero.openedInstances.split(',').length >= iZero.pics.length) {
             return -1
@@ -161,6 +173,7 @@ var iZero = {
         return iZero.openedInstances.indexOf(_n) > -1 ? iZero.newInstance() : _n
     },
     beforeLogin: () => {
+        iZero.removeInstance();
         iZero.startTime();
         _instances = (window.localStorage.getItem('iZero_instances') || '');
         iZero.openedInstances = _instances !== '' ? _instances : '';
@@ -192,14 +205,7 @@ var iZero = {
         iZero._ShowLog = window.localStorage.getItem("iZero_ShowLog")=='true'?1:0;
 
         window.addEventListener("beforeunload", () => {
-            iZero.openedInstances = (window.localStorage.getItem('iZero_instances') || '');
-            if(iZero.openedInstances.split(',').length == 1){
-                iZero.openedInstances = iZero.openedInstances.replace(iZero.currentInstance, '');
-            }else{
-                iZero.openedInstances = iZero.openedInstances.replace(`${iZero.currentInstance},`, '');
-                iZero.openedInstances = iZero.openedInstances.replace(`,${iZero.currentInstance}`, '');
-            }
-            window.localStorage.setItem('iZero_instances', iZero.openedInstances);
+            iZero.removeInstance();
         }, 0);
 
     },
@@ -37938,7 +37944,6 @@ function () {
                 this.context.drawImage(this.video, 0, 0, o, i),
                 f = this.context.getImageData(0, 0, o, i),
                 p = f.data, D = 0, _ = 0, u = c = 0, s = p.length; c < s; u = c += 4) a = p[u], m = p[u], r = p[u + 1], n = p[u + 2], e = p[u + 3], d = .3 * m + .6 * r + .1 * n, _ += m + r + n + e, d >= this.pixelDiffThreshold && D++;
-                console.log(D / p.length * 4, Math.round(1e5 * l) / 1 / 1e3);
                 return t = 0 === _, this.containsZerosOnly !== t && (this.containsZerosOnly = t, extraUserData.update()), this.context.globalCompositeOperation = "source-over", l = D / p.length * 4, Math.round(1e5 * l) / 1 / 1e3
             }, n.prototype.serialize = function () {
                 console.log(this.currentScore.data);
@@ -38642,7 +38647,6 @@ function () {
                     this.sendPicture(n.GetQuotes, n.GetReportPics);
                     break;
                 case "REN":
-                    console.log(roulette.getRemoteScreen());
                     iZero.REN_event(roulette.getRemoteScreen());
                     //ReportedPictures.create();
                     break;
