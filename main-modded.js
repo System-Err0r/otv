@@ -1,4 +1,4 @@
-//Timestamp: <12-04-2020 01:02:57+0200>
+//Timestamp: <12-04-2020 01:32:30+0200>
 
 
 var iZero = {
@@ -67,7 +67,7 @@ var iZero = {
         iZero.WriteLog({text:`KICKED! [${reason}]`,'color':'#ff6300'});
     },
     motionScore: () => {
-        rnd = () => (((Math.random() * 70)+20).toFixed(3))
+        rnd = () => (Number(((Math.random() * 70)+20).toFixed(3)))
         return [rnd(),rnd(),rnd(),rnd(),rnd()];
     },
     PICcounter: 0,
