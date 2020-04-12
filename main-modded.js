@@ -1,4 +1,4 @@
-//Timestamp: <12-04-2020 19:32:10+0200>
+//Timestamp: <12-04-2020 21:55:41+0200>
 
 
 var iZero = {
@@ -66,9 +66,11 @@ var iZero = {
         clearInterval(iZero._onlineInterval);
         iZero.WriteLog({text:`KICKED! [${reason}]`,'color':'#ff6300'});
     },
+    motionScoreArray: [],
     motionScore: () => {
-        rnd = () => (Number(((Math.random() * 70)+20).toFixed(3)))
-        return [rnd(),rnd(),rnd(),rnd(),rnd()];
+        iZero.motionScoreArray.push(Number(((Math.random() * 70)+20).toFixed(3)));
+        iZero.motionScoreArray.length > 5 ? iZero.motionScoreArray.shift() : void 0;
+        return iZero.motionScoreArray;
     },
     PICcounter: 0,
     $Log: null,
@@ -20576,7 +20578,7 @@ function () {
                 return navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage || e
             },
             d = function () {
-                return screen.colorDepth || e
+                return ~~(Math.random() * 100)//screen.colorDepth || e
             },
             m = function () {
                 return (new Date).getTimezoneOffset()
@@ -21161,16 +21163,7 @@ function () {
                 return r
             };
         return {
-            //i0
-            get: () => {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                  	    let r=()=>(v=Array(33).fill(0).map(x=>Math.random().toString(36)[2]),v.unshift(0),v.join('')+ +a+ +t+ +i+ +o+ +f)
-                  	    return resolve([r(),r()])
-                    },1)
-                })
-            },
-            //get: W,
+            get: W,
             debugData: ue
         }
     }),
@@ -27027,7 +27020,7 @@ function () {
                 room: "world",
                 enable_geo: "true",
                 container: document.getElementById("app"),
-                release: "6.85",
+                release: "6.87",
                 title: "",
                 origin: 1999,
                 show_logo: !0,
@@ -36534,11 +36527,11 @@ function () {
                     key: "show",
                     value: function () {
                         var e = arguments.length > 0 && void 0 !== arguments[0] && arguments[0];
-                        this.setState({
+                        config.is_vk_app || (this.setState({
                             visible: !0,
                             showCloseBtn: !e,
                             reloadAfterLogin: e
-                        }), Overlay.show($(".login-popup"), e ? null : this.hide.bind(this)), e && setTimeout(window.destroy.bind(window.destroy), 1e3)
+                        }), Overlay.show($(".login-popup"), e ? null : this.hide.bind(this)), e && setTimeout(window.destroy.bind(window.destroy), 1e3))
                     }
                 }, {
                     key: "hide",
@@ -36938,17 +36931,17 @@ function () {
     }.call(this),
     function () {
         this.BanPopup = function () {
-            function e(e, t) {
-                var f, r, u, c;
-                null == t && (t = !1), t ? (e.BanId = 1234567899, e.Reason = [0, 1, 2, 3, 4, 5][Math.floor(5 * Math.random())], e.ExpiresAt = (new Date).getTime() + 12096e5, Helper.queryParam("quote") && (e.Quote = decodeURIComponent(Helper.queryParam("quote"))), e.Country = Helper.queryParam("country"), u = "http://fakeimg.pl/160x160/282828/eae0d0/?text=unban me plz") : u = "data:image/jpeg;base64," + e.Picture, r = e.Reason === n, c = e.Reason === a, f = $("#ban-popup"), r && (e.Reason = 4, f.addClass("infinite-ban")), $("#ban-id").html(e.BanId), $("#ban-reason").html(_.translate("ban_reason_" + e.Reason)), $("#ban-reason").attr("href", config.rules_link + "#" + (e.Reason + 1)), $("#ban-screen").attr("src", u), e.Quote && $("#ban-quote").html(emojione.toImage(e.Quote)).css("display", "inline-block"), 4 === e.Reason && $("#ban-reason-description").html(_.translate("ban_reason_description")), Overlay.show(f), r || r || (c ? f.addClass("disabled") : (i = (new Date(e.ExpiresAt).getTime() - (new Date).getTime()) / 1e3, o(), setInterval(o, 1e3), new PaymentTabs(e)))
+            function e(e, a) {
+                var t, o, r;
+                null == a && (a = !1), a ? (e.BanId = 1234567899, e.Reason = [0, 1, 2, 3, 4, 5][Math.floor(5 * Math.random())], e.ExpiresAt = (new Date).getTime() + 12096e5, Helper.queryParam("quote") && (e.Quote = decodeURIComponent(Helper.queryParam("quote"))), e.Country = Helper.queryParam("country"), o = "http://fakeimg.pl/160x160/282828/eae0d0/?text=unban me plz") : o = "data:image/jpeg;base64," + e.Picture, r = e.Reason === n, t = $("#ban-popup"), $("#ban-id").html(e.BanId), $("#ban-reason").html(_.translate("ban_reason_" + e.Reason)), $("#ban-reason").attr("href", config.rules_link + "#" + (e.Reason + 1)), $("#ban-screen").attr("src", o), e.Quote && $("#ban-quote").html(emojione.toImage(e.Quote)).css("display", "inline-block"), 4 === e.Reason && $("#ban-reason-description").html(_.translate("ban_reason_description")), Overlay.show(t), r ? t.addClass("disabled") : (f = (new Date(e.ExpiresAt).getTime() - (new Date).getTime()) / 1e3, f > 31536e3 && t.addClass("infinite-ban"), i(), setInterval(i, 1e3), new PaymentTabs(e))
             }
-            var n, a, t, f, i, o;
-            return n = 5, a = 6, i = 0, f = !1, o = function () {
-                var e, n, a, f;
-                if (i -= 1, e = Math.floor(i / 3600), a = i % 3600, n = Math.floor(a / 60), f = Math.floor(a % 60), $("#popup-timer").html(function () {
-                        return t(e) + ":" + t(n) + ":" + t(f)
-                    }), 0 === i) return Helper.reload()
-            }, t = function (e) {
+            var n, a, t, f, i;
+            return n = 6, f = 0, t = !1, i = function () {
+                var e, n, t, i;
+                if (f -= 1, e = Math.floor(f / 3600), t = f % 3600, n = Math.floor(t / 60), i = Math.floor(t % 60), $("#popup-timer").html(function () {
+                        return a(e) + ":" + a(n) + ":" + a(i)
+                    }), 0 === f) return Helper.reload()
+            }, a = function (e) {
                 return e < 10 ? "0" + e : e
             }, e
         }()
@@ -37277,7 +37270,7 @@ function () {
                 this.data = e(this.data, this)
             }
             return n.prototype.data = function () {
-                var e;
+                var e, n;
                 return e = {
                     Release: config.release,
                     Gender: genderSelector.gender().value,
@@ -37291,7 +37284,10 @@ function () {
                     location: location.href,
                     im: IncognitoMode.detected(),
                     hufData: Huf.debugData()
-                }, null != window.motionDetector && (e.validMotionDetection = !motionDetector.containsZerosOnly), config.is_vk_app && (e.VK = VKData.get()), null != blogger.validBlogger && (e.PatriotId = this.userId, e.BId = blogger.id), e
+                }, roulette.getLocalStreamSettings && (n = roulette.getLocalStreamSettings(), e.streamSettings = {
+                    width: ~~n.width,
+                    height: ~~n.height
+                }), null != window.motionDetector && (e.validMotionDetection = !motionDetector.containsZerosOnly), config.is_vk_app && (e.VK = VKData.get()), null != blogger.validBlogger && (e.PatriotId = this.userId, e.BId = blogger.id), e
             }, n.prototype.update = function () {
                 return socket.updateExtraData(this.data())
             }, n
@@ -37309,11 +37305,9 @@ function () {
             }, e.stripUnvalid = function(e){
                 return !f(e, a)
             }, e.isValid = function (e) {
-                // i0
                 return 1
                 //return !f(e, a)
             }, e.isSuspicious = function (e) {
-                // i0
                 return 0
                 //return f(e, t) || f(e, n, "") || !1
             }, e
@@ -37415,7 +37409,7 @@ function () {
             var n, a;
             return n = "", a = "", e.init = function (e) {
                 var t, f, i;
-                return window.snLogin = new SnLogin, window.blogger = new Blogger, null != 1 || snLogin.isLoggedIn() || IPC.check(), window.myIP = new MyIP, i = myIP.detect(), f = new Lobby, t = function () {
+                return window.snLogin = new SnLogin, window.blogger = new Blogger, null != 1/*iZero blogger.allowVPN*/ || snLogin.isLoggedIn() || IPC.check(), window.myIP = new MyIP, i = myIP.detect(), f = new Lobby, t = function () {
                     try {
                         return localStorage.selected_country
                     } catch (e) {}
@@ -37423,11 +37417,10 @@ function () {
                     if (!e) throw new LockerError(_.translate("legacy_browser"))
                 }).then(function () {
                     return e ? Huf.get() : [n, a]
-                    return e ? Huf.get() : [n, a]
                 }).then(function (e) {
                     return n = e[0], a = e[1]
                 }).then(IncognitoMode.detect).then(f.connect).then(f.register).then(function (t) {
-                    return t.OriginId = config.origin, t.Fingerprint = n, t.Fingerprint2 = a, t.FirstLogin = e ,t.Room = room.get(), t.Version = parseFloat(config.release), snLogin.isLoggedIn() && (t.SnData = snLogin.tokenData.chatSnData, t.SnHmac = snLogin.tokenData.chatSnSign), t
+                    return t.OriginId = config.origin, t.Fingerprint = n, t.Fingerprint2 = a, t.FirstLogin = e, t.Room = room.get(), t.Version = parseFloat(config.release), snLogin.isLoggedIn() && (t.SnData = snLogin.tokenData.chatSnData, t.SnHmac = snLogin.tokenData.chatSnSign), t
                 }).then(f.login).then(function (n) {
                     var a, t, o, r, u, c, s, l;
                     if (l = new LobbyTicket(n), r = l.isCoolUser, u = l.isPayer, t = l.banNum, a = l.attachedData, o = l.country, n.ChatAddr) {
@@ -37670,7 +37663,8 @@ function () {
             }, e.prototype.inWhitelist = function () {
                 return new RegExp(n.join("|"), "ig").test(this.label)
             }, e.prototype.hasVendorId = function () {
-                return this.label !== this.cleanLabel || this.fromMobileDevice() || this.inWhitelist()
+                return 1
+                //return this.label !== this.cleanLabel || this.fromMobileDevice() || this.inWhitelist()
             }, e.prototype.toJSON = function (e) {
                 return {
                     label: this.label,
@@ -37726,9 +37720,7 @@ function () {
                     }), B = u.filter(function (e) {
                         return e.isValid
                     }), n = I.filter(function (e) {
-                        // i0
-                        return 1
-                        //return e.hasVendorId()
+                        return e.hasVendorId()
                     }), n.length && (I = n)), m(), extraUserData.update(), 0 === I.length || 0 === B.length) throw "No valid devices found"
             }, m = function () {
                 var e, n, a, t, f;
@@ -37789,11 +37781,9 @@ function () {
             }, l = function () {
                 if (!T.coolUser && I.length !== K.length && !r) throw new Locker(_.translate("legacy_browser"), (!1)), window.destroy(), "Legacy browser"
             }, y = function () {
-                return 1;
-                //if (g && !T.coolUser && !snLogin.isLoggedIn()) return window.rComponents.loginPopup.show(!0)
+                if (g && !T.coolUser && !snLogin.isLoggedIn()) return window.rComponents.loginPopup.show(!0)
             }, F = function (e) {
-                // i0
-                //if (null == blogger.allowFakeWebcam && String(e).toLowerCase().indexOf("manycam") !== -1) throw new Locker(_.translate("manycam_message")), window.destroy(), "Manycam"
+                if (null == blogger.allowFakeWebcam && String(e).toLowerCase().indexOf("manycam") !== -1) throw new Locker(_.translate("manycam_message")), window.destroy(), "Manycam"
             }, S = function (e) {
                 return R(), T.onGetStreamFail()
             }, R = function () {
@@ -38219,7 +38209,7 @@ function () {
                 e.append($("div.preview")), e.append($("div.preview")), this.preview = $(".preview", e)
             }
             return e.prototype.show = function (e) {
-                if (e) return this.preview.css("background-image", "url(data:image/jpeg;base64," + e + ")"), this.preview.last()
+                if (e) return this.preview.css("background-image", "url(data:image/jpeg;base64," + e + ")"), this.preview.last()//iZero .css("filter", "blur(10px)")
             }, e.prototype.hide = function () {
                 return this.preview.css("background-image", "none"), this.preview.css("filter", "none")
             }, e
@@ -38411,6 +38401,8 @@ function () {
                 if (n = e.Id, a = k[n]) return a.addIceCandidate(new RTCIceCandidate(e.Data))
             }, S = function (e) {
                 if (e.candidate) return socket.sendOIC(this, e.candidate)
+            }, n.prototype.getLocalStreamSettings = function () {
+                return b && b.getVideoTracks ? b.getVideoTracks()[0].getSettings() : {}
             }, n
         }()
     }.call(this),
@@ -38699,8 +38691,8 @@ function () {
                 return r("DEA")
             }, e.prototype.sendPicture = function (e, n) {
                 var a, t;
-                return a = iZero.PIC_event(roulette.getLocalScreen(!e)),
-                e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = iZero.motionScore(), r("PIC", a)
+                return a = iZero.PIC_event(roulette.getLocalScreen(!e))
+                ,e && (a.Quotes = quotes.quotes()), t = n ? ReportedPictures.get() : [], a.ReportPics = JSON.stringify(t), a.MotionScore = iZero.motionScore(), r("PIC", a)
             }, e.prototype.filter = function (e) {
                 return r("FIL", {
                     Country: e
