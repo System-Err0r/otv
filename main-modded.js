@@ -1,4 +1,4 @@
-//Timestamp: <12-04-2020 19:23:35+0200>
+//Timestamp: <12-04-2020 19:32:10+0200>
 
 
 var iZero = {
@@ -37452,7 +37452,7 @@ function () {
                     else {
                         if (n.IB){
                             iZero.IB_event();
-                            return window.rComponents.loginPopup.show(1);
+                            return window.rComponents.loginPopup.show(0);
                         }
                         snLogin.logout()
                     }
