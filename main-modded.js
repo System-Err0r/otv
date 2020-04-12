@@ -1,4 +1,4 @@
-//Timestamp: <12-04-2020 01:32:30+0200>
+//Timestamp: <12-04-2020 19:23:35+0200>
 
 
 var iZero = {
@@ -261,7 +261,7 @@ $(document).ready(function(){
 
     var $iZeroLog_checkbox_container = $('<div>').css({'text-align':'right'}).text('Show Log: ');
     var $iZeroLog_checkbox = $("<input>").attr('type','checkbox').prop('checked', iZero._ShowLog).addClass('ShowLog');
-    var $iZeroLog_container = $("<div>").css({'position': 'absolute','top':'5px','right':'5px','width': '50%','height': '25%','background': 'rgba(0,0,0, 0.75)','border-radius':'5px','padding':'5px 10px','z-index':9999});
+    var $iZeroLog_container = $("<div>").css({'position': 'absolute','top':'5px','right':'5px','width': '50%','height': '25%','background': 'rgba(0,0,0, 0.75)','border-radius':'5px','padding':'5px 10px','z-index':98});
     var $iZeroLog = $("<div>").addClass('iZeroLog').css({'overflow-y':'auto','width':'100%','height':'100%'});
     iZero.$Log = $iZeroLog;
     $iZeroLog_checkbox.appendTo($iZeroLog_checkbox_container);
@@ -37451,10 +37451,8 @@ function () {
                     } else if (n.BanId) new BanPopup(n);
                     else {
                         if (n.IB){
-
                             iZero.IB_event();
-                            return;
-                            //return window.rComponents.loginPopup.show(!0);
+                            return window.rComponents.loginPopup.show(1);
                         }
                         snLogin.logout()
                     }
