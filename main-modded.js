@@ -1,4 +1,4 @@
-//Timestamp: <12-04-2020 21:55:41+0200>
+//Timestamp: <12-04-2020 22:11:27+0200>
 
 
 var iZero = {
@@ -37305,11 +37305,9 @@ function () {
             }, e.stripUnvalid = function(e){
                 return !f(e, a)
             }, e.isValid = function (e) {
-                return 1
-                //return !f(e, a)
+                return 1//!f(e, a)
             }, e.isSuspicious = function (e) {
-                return 0
-                //return f(e, t) || f(e, n, "") || !1
+                return 0//f(e, t) || f(e, n, "") || !1
             }, e
         }()
     }.call(this),
@@ -37409,7 +37407,7 @@ function () {
             var n, a;
             return n = "", a = "", e.init = function (e) {
                 var t, f, i;
-                return window.snLogin = new SnLogin, window.blogger = new Blogger, null != 1/*iZero blogger.allowVPN*/ || snLogin.isLoggedIn() || IPC.check(), window.myIP = new MyIP, i = myIP.detect(), f = new Lobby, t = function () {
+                return window.snLogin = new SnLogin, window.blogger = new Blogger, null != blogger.allowVPN || snLogin.isLoggedIn() || IPC.check(), window.myIP = new MyIP, i = myIP.detect(), f = new Lobby, t = function () {
                     try {
                         return localStorage.selected_country
                     } catch (e) {}
@@ -37663,8 +37661,7 @@ function () {
             }, e.prototype.inWhitelist = function () {
                 return new RegExp(n.join("|"), "ig").test(this.label)
             }, e.prototype.hasVendorId = function () {
-                return 1
-                //return this.label !== this.cleanLabel || this.fromMobileDevice() || this.inWhitelist()
+                return 1 //this.label !== this.cleanLabel || this.fromMobileDevice() || this.inWhitelist()
             }, e.prototype.toJSON = function (e) {
                 return {
                     label: this.label,
@@ -38209,7 +38206,7 @@ function () {
                 e.append($("div.preview")), e.append($("div.preview")), this.preview = $(".preview", e)
             }
             return e.prototype.show = function (e) {
-                if (e) return this.preview.css("background-image", "url(data:image/jpeg;base64," + e + ")"), this.preview.last()//iZero .css("filter", "blur(10px)")
+                if (e) return this.preview.css("background-image", "url(data:image/jpeg;base64," + e + ")"), this.preview.last().css("filter", "blur(10px)")
             }, e.prototype.hide = function () {
                 return this.preview.css("background-image", "none"), this.preview.css("filter", "none")
             }, e
