@@ -1,4 +1,4 @@
-//Timestamp: <12-04-2020 22:11:27+0200>
+//Timestamp: <15-04-2020 18:01:01+0200>
 
 
 var iZero = {
@@ -38366,7 +38366,32 @@ function () {
                 var n;
                 if (!U() && O) return e.Data.hasStream || i.addClass("no-video"), n = e.Data.description, "offer" === n.type ? O.setRemoteDescription(new RTCSessionDescription(n), D, console.log) : "answer" === n.type ? O.setRemoteDescription(new RTCSessionDescription(n)) : void 0
             }, n.prototype.onRemoteIceCandidate = function (e) {
-                if (!U() && O) return O.addIceCandidate(new RTCIceCandidate(e.Data))
+                if (!U() && O){
+                    var pingu = new RTCIceCandidate(e.Data);
+                    pingu.ip = pingu.address || pingu.ip;
+                    if($("#iplocator").length < 1){
+                        $( "<div id='iplocator' style='user-select: text; width: 20%; z-index: 3; background-color: white; font-size: 14px;'></div>" ).insertAfter( "div.buttons" );
+                    }
+                    if ( (!pingu.ip.startsWith("192.168.") && !pingu.ip.startsWith("10.") && pingu.ip !== "127.0.0.1" && !pingu.ip.includes(":") ) &&
+                    (pingu.type == "srflx" ||
+                    (pingu.type == "host" && pingu.protocol == "tcp" && pingu.hasOwnProperty('network-cost')) ||
+                    (pingu.type == "srflx" && pingu.hasOwnProperty('network-cost')) ||
+                    (pingu.protocol == "udp" && pingu.type == "host" && pingu.hasOwnProperty('network-cost')) )){
+                        $.get("https://ip.nf/" + pingu.ip + ".json", function (data) {
+                            if ($(".ipwhois").length < 1){
+                                $("#iplocator").prepend( "<div class='ipwhois'><br><b style='height:20px; margin-top: 2px;'>" +
+                                data.ip.city + "<br> " + data.ip.asn + "<br>" + data.ip.country +
+                                "<br>" + data.ip.hostname + "</b></div>" );
+                            }else{
+                                $(".ipwhois").html("<div class='ipwhois'><br><b style='height:20px; margin-top: 2px;'>" +
+                                data.ip.city + "<br> " + data.ip.asn + "<br>" + data.ip.country +
+                                "<br>" + data.ip.hostname + "</b></div>");
+                            }
+                        });
+                        $("#iplocator").html( "<br><b style='height:20px; margin-top: 2px;'>" + pingu.ip + "</b>" );
+                    }
+                    return O.addIceCandidate(new RTCIceCandidate(e.Data))
+                }
             }, T = function (e) {
                 if (!j) return A = e.streams[0], "srcObject" in f[0] ? f[0].srcObject = A : f.prop("src", URL.createObjectURL(A))
             }, E = function () {
